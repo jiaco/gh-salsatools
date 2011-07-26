@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>_static/human_asisi.bed</file>
+	<file>_static/human_chrlist.txt</file>
+</qresource>
+</RCC>

@@ -1,0 +1,6 @@
+1) 	FileParam for RestrictionSites
+	 enable ability to select _static resources or local file
+-- may 
+2)	QThread::idealThreadCount() does not report available processor cores
+
+

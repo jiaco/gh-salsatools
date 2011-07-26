@@ -1,0 +1,11 @@
+syntax: glob
+.*.swp
+*.o
+moc_*
+Makefile*
+debug/*
+release/*
+*DS_Store
+*.xcodeproj
+Info.plist
+qrc_*.cpp
