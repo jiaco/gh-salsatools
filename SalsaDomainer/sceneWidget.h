@@ -29,12 +29,15 @@ class	SceneWidget	:	public	QWidget
 public:
 	SceneWidget( const QString& title, MyApp* app, QWidget* parent = 0 );
 
+	void	updateGraphics();
+/*
 	void	updateGraphics(
 		 const qreal& res = DEFAULT_RES,
 		 const qreal& width = DEFAULT_WIDTH,
 		 const qreal& height = DEFAULT_HEIGHT,
 		 const qreal& margin = DEFAULT_MARGIN
 		);
+*/
 	void	setupInput();
 	void	redrawInput();
 	void	redrawSites();
@@ -104,6 +107,7 @@ private:
 	QColor	clrInput, clrDomains, clrPeaks, clrSites, clrSelected;
 	QPen	pen;
 	QBrush	brush;
+	qreal	_width, _height;
 	qreal	_margin, _res, g_x0, g_y0, g_xmax, g_ymax;
 	qreal	d_xmax, d_ymax;
 	qreal	p_maxValue;

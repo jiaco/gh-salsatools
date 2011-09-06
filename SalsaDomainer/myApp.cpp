@@ -9,41 +9,134 @@ namespace	GH
 	_currentInputIndex = 0;
 	cout.open( "stdout" );
 
-	addParam( "FileInput", "", ParamModel::File, "Input File" );
-	addParam( "FileDomains", "", ParamModel::File, "Domains File" );
-	addParam( "FilePeaks", "", ParamModel::File, "Peaks File" );
+	addParam( "currentsid", ParamModel::Choice,
+	 "defaultValue='';"
+	 "displayName=Sid;"
+	 );
+	addParam( "maxvalue", ParamModel::Edit,
+	 "defaultValue=12;"
+	 "displayName=Max;"
+	 );
 
-	addParam( "CurrentSid", "", ParamModel::Choice, "Sid" );
-	addParam( "MaxValue", "12", ParamModel::Edit );
+	addParam( "input/file", ParamModel::File,
+	 "displayName=Input File;"
+	 "dialogType=OpenMulti;"
+	 "caption=Select input wig file(s);"
+	 "filter=" % WIG_SUFFIX % ";"
+	 );
+/*
+	addParam( "input/resolution", ParamModel::Edit,
+	 "displayName=Resolution;"
+	 "defaultValue=50;"
+  	 );
+*/
+	addParam( "input/load", ParamModel::Action,
+	 "displayName=Load;"
+	 );
 
-	addParam( "MinSeedValue", "2", ParamModel::Edit );
-	addParam( "MinSeedNumProbes", "80", ParamModel::Edit );
-	addParam( "MinSeedScore", "3.2", ParamModel::Edit );
+	addParam( "domains/file", ParamModel::File,
+	 "displayName=Domains File;"
+	 "dialogType=OpenMulti;"
+	 "caption=Select bed domain file(s);"
+	 "filter=" % BED_SUFFIX % ";"
+	 );
+	addParam( "domains_/load", ParamModel::Action,
+	 "displayName=Load Domains;"
+	 );
+	addParam( "domains/minseedvalue", ParamModel::Edit,
+	 "displayName=Min Seed Value;"
+	 "defaultValue=2;"
+	 );
+	addParam( "domains/minseednumprobes", ParamModel::Edit,
+	 "displayName=Min Seed Num Probes;"
+	 "defaultValue=80;"
+	 );
+	addParam( "domains/minseedscore", ParamModel::Edit,
+	 "displayName=Min Seed Score;"
+	 "defaultValue=3.2;"
+	 );
+	addParam( "domains/mincoverage", ParamModel::Edit,
+	 "displayName=Min Coverage;"
+	 "defaultValue=0.001;"
+	 );
+	addParam( "domains/mergedistance", ParamModel::Edit,
+	 "displayName=Merge Distance;"
+	 "defaultValue=200000;"
+	 );
+	addParam( "domains/minzonesize", ParamModel::Edit,
+	 "displayName=Min Zone Size;"
+	 "defaultValue=200000;"
+	 );
+	addParam( "domains/minzonescore", ParamModel::Edit,
+	 "displayName=Min Zone Score;"
+	 "defaultValue=2.2;"
+	 );
+	addParam( "domains/extendwidth", ParamModel::Edit,
+	 "displayName=Extend Width;"
+	 "defaultValue=40;"
+	 );
+	addParam( "domains/extendpctover", ParamModel::Edit,
+	 "displayName=Extend %Over;"
+	 "defaultValue=0.7;"
+	 );
+	addParam( "domains/runall", ParamModel::Boolean,
+	 "displayName=Run All;"
+	 "tooltip=Run on all loaded chromosomes;"
+	 "defaultValue=false;"
+	 );
+	addParam( "domains/run", ParamModel::Action,
+	 "displayName=Find Domains;"
+	 );
 
-	addParam( "MinCoverage", "0.001", ParamModel::Edit );
-
-	addParam( "MergeDistance", "200000", ParamModel::Edit );
-	addParam( "MinZoneSize", "200000", ParamModel::Edit );
-	addParam( "MinZoneScore", "2.2", ParamModel::Edit );
-	addParam( "ExtendWidth", "40", ParamModel::Edit );
-	addParam( "ExtendPctOver", "0.7", ParamModel::Edit );
-
-	addParam( "PeakMinNumProbes", "40", ParamModel::Edit );
-	addParam( "PeakMinPctAvg", "1.0", ParamModel::Edit );
-	addParam( "PeakMinPctOver", "0.7", ParamModel::Edit );
-	addParam( "PeakMergeDistance", "10000", ParamModel::Edit );
-
-	addParam( "RunAllDomain", "false", ParamModel::Boolean );
-	addParam( "RunAllPeak", "false", ParamModel::Boolean );
-
-	addParam( "Resolution", "50", ParamModel::Edit );
-
-	addParam( "LoadInput", "", ParamModel::Action );
-	addParam( "LoadDomains", "", ParamModel::Action );
-	addParam( "LoadPeaks", "", ParamModel::Action );
-
-	addParam( "Domains", "", ParamModel::Action );
-	addParam( "Peaks", "", ParamModel::Action );
+	addParam( "peaks/file", ParamModel::File,
+	 "displayName=Peaks File;"
+	 "dialogType=OpenMulti;"
+	 "caption=Select bed peaks file(s);"
+	 "filter=" % BED_SUFFIX % ";"
+	 );
+	addParam( "peaks_/load", ParamModel::Action,
+	 "displayName=Load Peaks;"
+	 );
+	addParam( "peaks/minnumprobes", ParamModel::Edit,
+	 "displayName=Min Num Probes;"
+	 "defaultValue=40;"
+	 );
+	addParam( "peaks/minpctavg", ParamModel::Edit,
+	 "displayName=Min %Average;"
+	 "defaultValue=1.0;"
+	 );
+	addParam( "peaks/minpctover", ParamModel::Edit,
+	 "displayName=Min %Over;"
+	 "defaultValue=0.7;"
+	 );
+	addParam( "peaks/mergedistance", ParamModel::Edit,
+	 "displayName=Merge Distance;"
+	 "defaultValue=10000;"
+	 );
+	addParam( "peaks/runall", ParamModel::Boolean,
+	 "displayName=Run All;"
+	 "tooltip=Run on all loaded chromosomes;"
+	 "defaultValue=false;"
+	 );
+	addParam( "peaks/run", ParamModel::Action,
+	 "displayName=Find Peaks;"
+	 );
+	addParam( "graphics/height", ParamModel::Edit,
+	 "displayName=Height;"
+	 "defaultValue=600"
+	 );
+	addParam( "graphics/width", ParamModel::Edit,
+	 "displayName=Width;"
+	 "defaultValue=600"
+	 );
+	addParam( "graphics/margin", ParamModel::Edit,
+	 "displayName=Margin;"
+	 "defaultValue=10"
+	 );
+	addParam( "graphics/resolution", ParamModel::Edit,
+	 "displayName=Resolution;"
+	 "defaultValue=50"
+	 );
 
 	BedLoader bedLoader;
 	bedLoader.load( ":/_static/human_asisi.bed", _siteData, false );
@@ -106,9 +199,10 @@ const	BedList	MyApp::peaks( const QString& sid ) const
 	}
 	return( _peakData.at( i ).data );
 }
+/*
 void	MyApp::QCPeakFind( const QList<int>& idxList )
 {
-	int	_maxValue = I( param( "MaxValue" )->value() );
+	int	_maxValue = APP_I( "maxvalue"  );
 	int	_peakMinNumProbes = I( param( "PeakMinNumProbes" )->value() );
 	int	_peakMergeDistance = I( param( "PeakMergeDistance" )->value() );
 	double	_peakMinPctAvg = D( param( "PeakMinPctAvg" )->value() );
@@ -213,7 +307,7 @@ void	MyApp::QCDomainFind( const QList<int>& idxList )
 	if( !isGui() ) {
 		cout << "RUNNING" << endl;
 	}
-	int	_maxValue = I( param( "MaxValue" )->value() );
+	int	_maxValue = APP_I( "maxvalue"  );
 	int	_minSeedValue = I( param( "MinSeedValue" )->value() );
 	int	_minSeedNumProbes = I( param( "MinSeedNumProbes" )->value() );
 	// double	_minSeedPctOver = param( "MinSeedPctOver" )->value().toDouble();
@@ -245,10 +339,10 @@ void	MyApp::QCDomainFind( const QList<int>& idxList )
 		WigList	input = _input.at( idx ).data;
 		double	inputAverage = WigList_average( input );
 
-/*
+*
  *	CHANGING THIS PCT OVER THING TO A MIN SCORE (FLAT)
   	REMOVE minSeedPctOver
- */
+ *
 		WigList_findSeeds( input, seeds, _minSeedNumProbes,
 		 _minSeedValue, _maxValue, _minSeedScore );
 emit( log( QString( "%1 seeds to start" ).arg( seeds.size() ) ) );
@@ -275,7 +369,7 @@ emit( log( QString( "%1 seeds after extension" ).arg( seeds.size() ) ) );
 emit( log( QString( "%1 seeds after final score filter" ).arg( seeds.size() ) ) );
 emit( log( "------------------\n\n" ) );
 
-/*
+*
 		double	inputAverage;
 		PVList	input = _input[ idx ].asPVList( &inputAverage );
 		_domainData[ idx ].clear();
@@ -313,7 +407,7 @@ cout << "DEBUG " << minScoreCalc << " ( " << _minZoneScore << " / 100 ) * " << i
 		ZoneListFilterByScore( seeds, minScoreCalc );
 cout << "DEBUG final number of domains " << seeds.size() << endl;
 
-*/
+*
 		_domainData[ didx ].data.clear();
 		_domainData[ didx ].data << BedList_fromWZoneList( seeds );
 
@@ -327,27 +421,28 @@ cout << "DEBUG final number of domains " << seeds.size() << endl;
 		}
 	}
 }
+*/
 void	MyApp::doDomainFind()
 {
 	QList<int>	idxToRun;
 
-	if( _input.size() == 0 ) {
-		setCritical( "Peak finding requires input first" );
+	if( _input.size() == 0  && !loadInput() ) {
+		setCritical( "Domain finding requires input first" );
 		showError();
 		return;
 	}
 	if( ( _currentInputIndex =
-	 SidSetIndex<WigSet>( _input, S( param( "CurrentSid" )->value() ) ) ) == UINT ) {
-		setCritical( "Peak finding failed. Sid not found in input" );
+	 SidSetIndex<WigSet>( _input, APP_S( "currentsid" ) ) ) == UINT ) {
+		setCritical( "Domain finding failed. Sid not found in input" );
 		showError();
 		return;
 	}
 	if( _input.at( _currentInputIndex ).data.size() == 0 ) {
-		setCritical( "Peak finding requires input for selected sid" );
+		setCritical( "Domain finding requires input for selected sid" );
 		showError();
 		return;
 	}
-	if( B( param( "RunAllDomain" )->value() ) ) {
+	if( APP_B( "domains/runall" ) ) {
 		for( int i = 0; i < _input.size(); ++i ) {
 			idxToRun << i;
 		}
@@ -403,7 +498,7 @@ void	MyApp::doPeakFind()
 		return;
 	}
 	if( ( _currentInputIndex =
-	 SidSetIndex<WigSet>( _input, S( param( "CurrentSid" )->value() ) ) ) == UINT ) {
+	 SidSetIndex<WigSet>( _input, APP_S( "currentsid" ) ) ) == UINT ) {
 		setCritical( "Peak finding failed. Sid not found in input" );
 		showError();
 		return;
@@ -418,7 +513,7 @@ void	MyApp::doPeakFind()
 		showError();
 		return;
 	}
-	if( B( param( "RunAllPeak" )->value() ) ) {
+	if( APP_B( "peaks/runall" ) ) {
 		for( int i = 0; i < _input.size(); ++i ) {
 			idxToRun << i;
 		}
@@ -474,7 +569,7 @@ bool	MyApp::loadInput()
 
 	_sidList.clear();
 
-	if( !wigLoader.load( param( "FileInput" )->value(), _input, isGui() ) ) {
+	if( !wigLoader.load( APP_V( "input/file" ), _input, isGui() ) ) {
 		setError( wigLoader.error() );
 		showError();
 	} else {
@@ -482,6 +577,7 @@ bool	MyApp::loadInput()
 			_sidList << _input.at( i ).sid;
 		}
 		qSort( _sidList.begin(), _sidList.end(), SortSidByChr );
+	// BAD WIG INPUT CAN LEAD TO ISSUES HERE BUT THE BUG IS IN GHBIO/GHSALSA
 		if( _sidList.size() > 0 ) {
 			emit( inputChanged( _sidList ) );
 		}
@@ -494,7 +590,7 @@ bool	MyApp::loadDomains()
 {
 	BedLoader	bedLoader;
 
-	if( !bedLoader.load( param( "FileDomains" )->value(), _domainData, isGui() ) ) {
+	if( !bedLoader.load( APP_V( "domains/file" ), _domainData, isGui() ) ) {
 		setError( bedLoader.error() );
 		showError();
 	} else {
@@ -508,7 +604,7 @@ bool	MyApp::loadPeaks()
 {
 	BedLoader	bedLoader;
 
-	if( !bedLoader.load( param( "FilePeaks" )->value(), _peakData, isGui() ) ) {
+	if( !bedLoader.load( APP_V( "peaks/file" ), _peakData, isGui() ) ) {
 		setError( bedLoader.error() );
 		showError();
 	} else {
@@ -549,7 +645,7 @@ bool	MyApp::writeBedList( const BedList& data, const QString& path )
 }
 void	MyApp::setDomains( const QString& sid, const BedList& domains )
 {
-	int	_maxValue = I( param( "MaxValue" )->value() );
+	int	_maxValue = APP_I( "maxvalue" );
 
 	int	domIdx = UINT;
 	int	idx = UINT;
@@ -575,7 +671,7 @@ qDebug() << "DOMAINS GETTING SET, SHOULD EMIT UPDATE " << _domainData[ domIdx ].
 }
 void	MyApp::setPeaks( const QString& sid, const BedList& peaks )
 {
-	int	_maxValue = I( param( "MaxValue" )->value() );
+	int	_maxValue = APP_I( "maxvalue" );
 
 	int	peakIdx = UINT;
 	int	idx = UINT;
@@ -601,10 +697,12 @@ void	MyApp::setPeaks( const QString& sid, const BedList& peaks )
 // THIS LOOKS LIKE IT MIGHT CRASH
 bool	MyApp::saveAllDomains( const QString& path )
 {
+	Q_UNUSED( path );
 	return( true );
 }
 bool	MyApp::saveAllPeaks( const QString& path )
 {
+	Q_UNUSED( path );
 	return( true );
 }
 bool	MyApp::saveDomains( const QString& sid, const QString& path )

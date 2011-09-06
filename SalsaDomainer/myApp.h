@@ -18,8 +18,8 @@ public:
 	void	setDefaults();
 	void	showParams();
 	void	doit();	// cmdline
-	void	QCDomainFind( const QList<int>& idxList );
-	void	QCPeakFind( const QList<int>& idxList );
+	//void	QCDomainFind( const QList<int>& idxList );
+	//void	QCPeakFind( const QList<int>& idxList );
 
 	const	QStringList	sidList() const;
 

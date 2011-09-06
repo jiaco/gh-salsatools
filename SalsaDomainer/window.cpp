@@ -8,7 +8,6 @@ namespace	GH
 {
 	_myApp = app;
 	setWindowTitle( "Salsa Domainer" );
-	//createParamView();
 
 	_widgetCentral = new QWidget( this );
 	_tabWidget = new QTabWidget( this );
@@ -17,15 +16,8 @@ namespace	GH
 	_widgetInput = new QWidget( this );
 	_widgetInput->setLayout( layoutInput );
 	int row = 0;
-	row = pui( layoutInput,
-		 QStringList()
-		 	<< "FileInput"
-			 << "LoadInput"
-			<< "Resolution",
-		 row );
-	FileView::Configure( this, "FileInput",
-		FileView::OpenMulti, "Select input wig file(s)", WIG_SUFFIX );
-	ActionView::AddListener( this, "LoadInput",
+	row = pui( layoutInput, _myApp->paramNames( "input" ), row );
+	ActionView::AddListener( this, "input/load",
 	 _myApp, SLOT( loadInput() ) );
 	
 
@@ -33,48 +25,20 @@ namespace	GH
 	_widgetDomains = new QWidget( this );
 	_widgetDomains->setLayout( layoutDomains );
 	row = 0;
-	row = pui( layoutDomains,
-		 QStringList()
-			<< "FileDomains"
-			 << "LoadDomains"
-		 	<< "MinSeedValue"
-		 	<< "MinSeedNumProbes"
-		 	<< "MinSeedScore"
-		 	<< "MinCoverage"
-		 	<< "MergeDistance"
-		 	<< "MinZoneSize"
-		 	<< "MinZoneScore"
-		 	<< "ExtendWidth"
-		 	<< "ExtendPctOver"
-		 	<< "RunAllDomain"
-			<< "Domains",	// the Action
-
-		row );
-	FileView::Configure( this, "FileDomains",
-		FileView::OpenMulti, "Select bed domain file(s)", BED_SUFFIX );
-	ActionView::AddListener( this, "LoadDomains",
-	 _myApp, SLOT( loadDomains() ) );
+	row = pui( layoutDomains, _myApp->paramNames( "domains" ), row );
+	ActionView::AddListener( this, "domains/load", _myApp, SLOT( loadDomains() ) );
+	FileView::AddAction( this, "domains/file", ActionView::Action( this, "domains_/load" ) );
+	ActionView::AddListener( this, "domains/run", _myApp, SLOT( doDomainFind() ) );
 		
 	QGridLayout *layoutPeaks = new QGridLayout;
 	_widgetPeaks = new QWidget( this );
 	_widgetPeaks->setLayout( layoutPeaks );
 
 	row = 0;
-	row = pui( layoutPeaks,
-		QStringList()
-			<< "FilePeaks"
-			 << "LoadPeaks"
-			<< "PeakMinNumProbes"
-			<< "PeakMinPctAvg"
-			<< "PeakMinPctOver"
-			<< "PeakMergeDistance"
-			<< "RunAllPeak"
-			<< "Peaks",	// the Action
-		row );
-	FileView::Configure( this, "FilePeaks",
-		FileView::OpenMulti, "Select bed peak file(s)", BED_SUFFIX );
-	ActionView::AddListener( this, "LoadPeaks",
-	 _myApp, SLOT( loadPeaks() ) );
+	row = pui( layoutPeaks, _myApp->paramNames( "peaks" ), row );
+	ActionView::AddListener( this, "peaks/load", _myApp, SLOT( loadPeaks() ) );
+	FileView::AddAction( this, "peaks/file", ActionView::Action( this, "peaks_/load" ) );
+	ActionView::AddListener( this, "peaks/run", _myApp, SLOT( doPeakFind() ) );
 /*
 	_widgetInput = pui( this, this->app, QStringList()
 	 << "FileInput"
@@ -134,8 +98,13 @@ namespace	GH
 	QGridLayout	*layout = new QGridLayout;
 	_widgetCentral->setLayout( layout );
 
+	pui( layout, QStringList() << "currentsid" << "maxvalue", 0 );
+//++row?
+
+/*
 	paramView( "CurrentSid" )->addToGrid( layout, 0, 0 );
 	paramView( "MaxValue" )->addToGrid( layout, 1, 0 );
+*/
 	layout->addWidget( _tabWidget, 2, 0, 1, -1 );
 
 /*
@@ -152,10 +121,10 @@ namespace	GH
 	ComboParam::AddListener( this, "CurrentSid",
 	 this, SLOT( updateSceneWidget(QString) ) );
 */
-	ConnectToSlot<ChoiceView>( this, "CurrentSid", SIGNAL( activated(QString) ),
+	ConnectToSlot<ChoiceView>( this, "currentsid", SIGNAL( activated(QString) ),
 		this, SLOT( activateSceneWidget(QString) ) );
-	ConnectToSignal<ChoiceView>( this, "CurrentSid", _myApp, SIGNAL( inputChanged(QStringList) ),
-		SLOT( setChoices(QStringList) ) );
+	ConnectToSignal<ChoiceView>( this, "currentsid", _myApp,
+	 SIGNAL( inputChanged(QStringList) ), SLOT( setChoices(QStringList) ) );
 		
 /*
 	{
@@ -170,8 +139,6 @@ namespace	GH
 
 	}
 */
-	ActionView::AddListener( this, "Domains", _myApp, SLOT( doDomainFind() ) );
-	ActionView::AddListener( this, "Peaks", _myApp, SLOT( doPeakFind() ) );
 /*
 	AddButton( _widgetDomains, "Domains",
 		this->app, SLOT( doDomainFind() ) );
@@ -189,10 +156,11 @@ namespace	GH
 	connect( app, SIGNAL( peaksUpdated(QString) ),
 	 this, SLOT( dispatchUpdate(QString) ) );
 
-	
+	appendHelpMenu();
 }
 void	Window::activateSceneWidget( const QString& sid )
 {
+qDebug() << "ACTIVATE " << sid;
 	if( !swmap.contains( sid ) ) {
 		SceneWidget *p = new SceneWidget( sid, _myApp, this );
 		connect( p, SIGNAL( message( QString, int ) ),

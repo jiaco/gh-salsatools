@@ -30,7 +30,7 @@ void	PVatRes( const WigList& wig,
 {
 	this->app = app;
 	_sid = title;	// NEED TO FIX/NAME THIS BETTER
-	p_maxValue = D( app->param( "MaxValue" )->value() );
+	p_maxValue = APP_D( "maxvalue" );
 
 	clrInput = QColor( 0, 0, 255, 255 );
 	clrSites = QColor( 0, 0, 0, 255 );
@@ -44,6 +44,7 @@ void	PVatRes( const WigList& wig,
 	view = new View( scene, this );
 	view->setScaleOp( SCALE_X_ONLY );
 	view->setMoveOp( MOVE_X_ONLY );
+	view->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
 	_actSaveDomains = new QAction( tr( "Save Domains" ), this );
 	connect( _actSaveDomains, SIGNAL( triggered() ),
@@ -118,7 +119,8 @@ void	PVatRes( const WigList& wig,
 
 	_controlWidget = new QWidget( this );
 	EditResolution =
-	 new QLineEdit( S( app->param( "Resolution" )->value() ), this );
+	 new QLineEdit( APP_S( "graphics/resolution" ), this );
+	 //new QLineEdit( S( app->param( "Resolution" )->value() ), this );
 	QVBoxLayout	*controlLayout = new QVBoxLayout;
 	controlLayout->addWidget( new QLabel( "Resolution:" ) );
 	controlLayout->addWidget( EditResolution );
@@ -365,22 +367,32 @@ void	SceneWidget::viewItemClicked( QGraphicsItem* item )
 			highlightPeak( index );
 			break;
 		case	GITEM_SITE:
+// it works but the line is 1 pixel wide and hard to hit with mouse
 			tableSites->setCurrentCell( index, 0 );
 			break;
 		default:
 			break;
 	}
 }
+/*
 void	SceneWidget::updateGraphics( const qreal& res,
 	 const qreal& width, const qreal& height, const qreal& margin )
+*/
+void	SceneWidget::updateGraphics()
 {
-	_res = res;
-	g_x0 = g_y0 = _margin = margin;
-	g_xmax = width - ( 2 * margin );
-	g_ymax = height - ( 2 * margin );
+	_res = APP_D( "graphics/resolution" );
+	_margin = APP_D( "graphics/margin" );
+	_width = APP_D( "graphics/width" );
+	_height = APP_D( "graphics/height" );
 
-	view->setSceneRect( g_x0, g_y0, g_x0 + g_xmax, g_y0 + g_ymax );
-	resize( width * 2, height );
+	//_res = res;
+	g_x0 = g_y0 = _margin;// = margin;
+	g_xmax = _width - ( 2 * _margin );
+	g_ymax = _height - ( 2 * _margin );
+
+	//view->setSceneRect( g_x0, g_y0, g_x0 + g_xmax, g_y0 + g_ymax );
+	view->setSceneRect( g_x0, g_y0, g_xmax, g_ymax );
+	resize( _width * 2, _height );
 }
 void	SceneWidget::setupInput()
 {
@@ -399,17 +411,18 @@ void	SceneWidget::setupInput()
 			d_ymax = _input.at( i ).val;
 		}
 	}
+	if( d_ymax > p_maxValue ) {
+		d_ymax = p_maxValue;
+	}
 
 	QString	oldTitle = windowTitle();
 	setWindowTitle( QString( "%1 - %2 [ %3 ]" ).arg( oldTitle ).arg( d_ymax ).arg( p_maxValue ) );
 
-	if( d_ymax > p_maxValue ) {
-		d_ymax = p_maxValue;
-	}
 }
 void	SceneWidget::redrawInput()
 {
 	const WigList _input = app->input( _sid );
+	QGraphicsTextItem 	*gti;
 
 	if( _input.size() == 0 ) {
 		return;
@@ -425,6 +438,10 @@ void	SceneWidget::redrawInput()
 
 	PVatRes( _input, i, _res, pos, val, p_maxValue );
 
+	gti = scene->addText( QString( "%1" ).arg( pos, 0, 'f' ) );
+	gti->setPos( g_x0 + ( g_xmax * ( pos / d_xmax ) ), _margin );
+	gti->setFlag( QGraphicsItem::ItemIgnoresTransformations, true );
+
 	x0 = g_x0 + ( g_xmax * ( pos / d_xmax ) );
 	y0 = g_y0 + ( g_ymax * ( val / p_maxValue ) );
 	for( i += _res; i < _input.size(); i += _res ) {
@@ -438,7 +455,16 @@ void	SceneWidget::redrawInput()
 		x0 = x1;
 		y0 = y1;
 	}
-	double	hline = D( app->param( "MinZoneScore" )->value() );
+	gti = scene->addText( QString( "%1" ).arg( pos, 0, 'f' ) );
+	gti->setPos( g_x0 + ( g_xmax * ( pos / d_xmax ) ), _margin );
+	gti->setFlag( QGraphicsItem::ItemIgnoresTransformations, true );
+
+	pos /= 2;
+	gti = scene->addText( QString( "%1" ).arg( pos, 0, 'f' ) );
+	gti->setPos( g_x0 + ( g_xmax * ( pos / d_xmax ) ), _margin );
+	gti->setFlag( QGraphicsItem::ItemIgnoresTransformations, true );
+
+	double	hline = APP_D( "domains/minzonescore" );
 	hline = g_y0 + ( g_ymax * ( hline / p_maxValue ) );
 	scene->addLine( g_x0, hline, g_xmax, hline, QPen( QColor( "red" ) ) );
 /*

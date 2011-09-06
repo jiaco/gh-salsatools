@@ -11,19 +11,19 @@ void	DomainDol::work()
 {
 	double	minScoreCalc, inputAverage;
 
-	int	maxValue = I( getParam( "MaxValue" ) );
-	int	minSeedValue = I( getParam( "MinSeedValue" ) );
-	int	minSeedNumProbes = I( getParam( "MinSeedNumProbes" ) );
-	double	minSeedScore = D( getParam( "MinSeedScore" ) );
+	int	maxValue = APP_I( "maxvalue" );
+	int	minSeedValue = APP_I( "domains/minseedvalue" );
+	int	minSeedNumProbes = APP_I( "domains/minseednumprobes" );
+	double	minSeedScore = APP_D( "domains/minseedscore" );
 	
-	double	minCoverage = D( getParam( "MinCoverage" ) );
+	double	minCoverage = APP_D( "domains/mincoverage" );
 
-	int	mergeDistance = I( getParam( "MergeDistance" ) );
-	int	minZoneSize = I( getParam( "MinZoneSize" ) );
-	double	minZoneScore = D( getParam( "MinZoneScore" ) );
+	int	mergeDistance = APP_I( "domains/mergedistance" );
+	int	minZoneSize = APP_I( "domains/minzonesize" );
+	double	minZoneScore = APP_D( "domains/minzonescore" );
 
-	int	xWidth = I( getParam( "ExtendWidth" ) );
-	double	xPct = D( getParam( "ExtendPctOver" ) );
+	int	xWidth = APP_I( "domains/extendwidth" );
+	double	xPct = APP_D( "domains/extendpctover" );
 
 	WZoneList	seeds;
 
@@ -50,11 +50,11 @@ void	DomainDol::work()
 void	PeakDol::work()
 {
 	double	inputAverage, domainAverage, valueCutoff;
-	int maxValue = I( getParam( "MaxValue" ) );
-	int peakMergeDistance = I( getParam( "PeakMergeDistance" ) );
-	double peakMinNumProbes = I( getParam( "PeakMinNumProbes" ) );
-	double peakMinPctAvg = D( getParam( "PeakMinPctAvg" ) );
-	double peakMinPctOver = D( getParam( "PeakMinPctOver" ) );
+	int maxValue = APP_I( "maxvalue" );
+	int peakMergeDistance = APP_I( "peaks/mergedistance" );
+	double peakMinNumProbes = APP_I( "peaks/minnumprobes" );
+	double peakMinPctAvg = APP_D( "peaks/minpctavg" );
+	double peakMinPctOver = APP_D( "peaks/minpctover" );
 
 	WZoneList	mtab, peaks;
 	QList<Wig>	dtab, ztab;
