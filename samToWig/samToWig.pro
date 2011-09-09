@@ -1,7 +1,7 @@
 TEMPLATE=app
 TGT="samToWig"
 
-CONFIG += gh gui
+CONFIG += gh bio gui
 
 #RESOURCES += $$(GH_HOME)/resources/headers.qrc
 
