@@ -1,0 +1,10 @@
+in order to get info on the distribution
+
+run with -d true to call the dumpD function.
+Save the output to a file x.rdata
+
+R
+
+d = read.table( "x.rdata" );
+x = as.matrix( d );
+summary( x );
